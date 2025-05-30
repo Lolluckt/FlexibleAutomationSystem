@@ -1,0 +1,420 @@
+﻿<Window x:Class="FlexibleAutomationSystem.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="Система управління гнучкою автоматизованою дільницею" 
+        Height="800" Width="1400"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="GridLinesVisibility" Value="All"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+        </Style>
+
+        <Style x:Key="MenuButtonStyle" TargetType="RadioButton">
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="LightYellow"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Margin="5" CornerRadius="10" BorderBrush="Gray" BorderThickness="1" Background="White">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="#FF78CA78" 
+                        CornerRadius="10,10,0,0" Padding="10">
+                    <TextBlock Text="Welcome" 
+                               HorizontalAlignment="Center" 
+                               FontSize="18" 
+                               FontWeight="Bold"/>
+                </Border>
+
+                <StackPanel Grid.Row="1" Margin="10">
+                    <RadioButton Name="rbInputData" 
+                                 Style="{StaticResource MenuButtonStyle}"
+                                 IsChecked="True">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📊 " FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Вхідні дані" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton Name="rbGanttChart" 
+                                 Style="{StaticResource MenuButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📈 " FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Діаграми Ганта" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton Name="rbPetriNet" 
+                                 Style="{StaticResource MenuButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🔗 " FontSize="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Мережі Петрі" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+
+                <Button Grid.Row="2" 
+                        Name="btnAbout"
+                        Margin="10"
+                        Click="BtnAbout_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="ℹ️ " FontSize="16" Margin="0,0,10,0"/>
+                        <TextBlock Text="Про програму"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="1" Margin="5" CornerRadius="10" BorderBrush="Gray" BorderThickness="1" Background="White">
+            <Grid>
+                <Grid Name="gridInputData" Visibility="Visible">
+                    <TabControl>
+                        <TabItem Header="Деталі" Background="#FFF17A7A" BorderBrush="Black" Foreground="Black">
+                            <Grid Margin="20">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+                                    <TextBlock Text="Кількість деталей:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBox Name="nudDetails" 
+                                             Text="14" 
+                                             Width="100"
+                                             ToolTip="1-21"
+                                             PreviewTextInput="NumberValidationTextBox"
+                                             TextChanged="NudDetails_ValueChanged"/>
+
+                                    <TextBlock Text="Максимальна к-ть етапів:" VerticalAlignment="Center" Margin="30,0,10,0"/>
+                                    <TextBox Name="nudSteps" 
+                                             Text="5" 
+                                             Width="100"
+                                             ToolTip="1-14"
+                                             PreviewTextInput="NumberValidationTextBox"
+                                             TextChanged="NudDetails_ValueChanged"/>
+                                </StackPanel>
+
+                                <TextBlock Grid.Row="1" Text="Матриця технологічних маршрутів / Матриця часу обробки:" 
+                                          FontWeight="Bold" Margin="0,0,0,10"/>
+
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="10"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <DataGrid Name="dgDetailSteps" Grid.Column="0"/>
+                                    <DataGrid Name="dgDetailStepTimes" Grid.Column="2"/>
+                                </Grid>
+
+                                <Label Name="lblDataError" 
+                                       Grid.Row="3" 
+                                       Content="Невірні дані або їх формат" 
+                                       Foreground="Red" 
+                                       Visibility="Collapsed"
+                                       HorizontalAlignment="Center"
+                                       FontWeight="Bold"/>
+                            </Grid>
+                        </TabItem>
+
+                        <TabItem Header="Виробничі модулі" Background="#FF88E4D9">
+                            <Grid Margin="20">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+                                    <TextBlock Text="Кількість ГВМ:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <TextBox Name="nudProduction" 
+                                             Text="5" 
+                                             Width="100"
+                                             ToolTip="1-10"
+                                             PreviewTextInput="NumberValidationTextBox"
+                                             TextChanged="NudDetails_ValueChanged"/>
+                                </StackPanel>
+
+                                <DataGrid Name="dgProdCellCount" Grid.Row="1" Width="400" HorizontalAlignment="Left">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Кількість накопичувачів" 
+                                                          Binding="{Binding Value}" 
+                                                          Width="*"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+
+                        <TabItem Header="Транспортні модулі" Background="#FFD25B5B">
+                            <Grid Margin="20">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Кількість АТМ:" Margin="0,0,10,10"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" 
+                                             Name="nudTransport" 
+                                             Text="3" 
+                                             Width="100"
+                                             HorizontalAlignment="Left"
+                                             ToolTip="1-10"
+                                             PreviewTextInput="NumberValidationTextBox"
+                                             TextChanged="NudDetails_ValueChanged"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Середня швидкість АТМ:" Margin="0,0,10,10"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtSpeed" Text="0" Width="100" HorizontalAlignment="Left"
+                                            ToolTip="Швидкість"
+                                            TextChanged="TxtTransport_TextChanged"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Час завантаження:" Margin="0,0,10,10"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtTimeLoad" Text="0" Width="100" HorizontalAlignment="Left"
+                                            ToolTip="Час"
+                                            TextChanged="TxtTransport_TextChanged"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Час розвантаження:" Margin="0,0,10,10"/>
+                                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtTimeUnload" Text="0" Width="100" HorizontalAlignment="Left"
+                                            ToolTip="Час"
+                                            TextChanged="TxtTransport_TextChanged"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Час взяти/поставити:" Margin="0,0,10,10"/>
+                                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="txtTimeGiveTake" Text="0" Width="100" HorizontalAlignment="Left"
+                                            ToolTip="Час"
+                                            TextChanged="TxtTransport_TextChanged"/>
+                                </Grid>
+
+                                <TextBlock Grid.Row="1" Text="Відстані між модулями:" FontWeight="Bold" Margin="0,20,0,10"/>
+
+                                <DataGrid x:Name="dgTransDistance" Grid.Row="2"/>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+
+                    <StackPanel Orientation="Horizontal" 
+                               HorizontalAlignment="Right" 
+                               VerticalAlignment="Bottom" 
+                               Margin="20">
+                        <Button Name="btnSave" 
+                               Content="Зберегти дані" 
+                               Margin="5"
+                               Padding="10,5"
+                               Click="BtnSave_Click"/>
+                        <Button Name="btnLoad" 
+                               Content="Завантажити дані" 
+                               Margin="5"
+                               Padding="10,5"
+                               Click="BtnLoad_Click"/>
+                        <Button Name="btnNext" 
+                               Content="Далі" 
+                               Margin="5"
+                               Padding="10,5"
+                               Background="LightBlue"
+                               Click="BtnNext_Click"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Name="gridGantt" Visibility="Collapsed">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="200"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" Margin="10">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <Canvas Name="canvasGantt" Background="White" Width="800" Height="400"/>
+                        </ScrollViewer>
+                    </Border>
+
+                    <Grid Grid.Row="1" Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+
+                        <DataGrid Name="dgWorkModules" Grid.Column="0"/>
+
+                        <StackPanel Grid.Column="1" Margin="10">
+                            <TextBlock Text="Час циклу:" FontWeight="Bold"/>
+                            <TextBox Name="txtCycleTime" IsReadOnly="True" Margin="0,5,0,10"/>
+
+                            <TextBlock Text="Час у матриці:" FontWeight="Bold"/>
+                            <ComboBox Name="cmbShowTime" Margin="0,5,0,10">
+                                <ComboBoxItem Content="не виводити" IsSelected="True"/>
+                                <ComboBoxItem Content="час процесу"/>
+                                <ComboBoxItem Content="час початку-кінця"/>
+                            </ComboBox>
+
+                            <CheckBox Name="chkDrawLegend" Content="Показати легенду" Margin="0,10"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Grid.Row="2" Margin="10" Padding="15" BorderBrush="Gray" BorderThickness="1" CornerRadius="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Правило переваги ГВМ:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <ComboBox Name="cmbProdRule" Margin="0,0,0,10" Width="350" HorizontalAlignment="Left">
+                                    <ComboBoxItem Content="найкоротшої операції" IsSelected="True" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
+                                    <ComboBoxItem Content="найдовшої операції" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
+                                    <ComboBoxItem Content="мінімальної залишкової трудомісткості" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
+                                    <ComboBoxItem Content="максимальної залишкової трудомісткості" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
+                                    <ComboBoxItem Content="вирівнювання завантаження верстатів" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
+                                </ComboBox>
+
+                                <TextBlock Text="Правило переваги АТМ:" FontWeight="Bold" Margin="0,0,0,5"/>
+                                <ComboBox Name="cmbTransRule" Margin="0,0,0,5" Width="350" HorizontalAlignment="Left">
+                                    <ComboBoxItem Content="максимізації завантаження" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
+                                    <ComboBoxItem Content="мінімізації завантаження" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
+                                    <ComboBoxItem Content="найближчого АТМ" IsSelected="True" Background="{DynamicResource {x:Static SystemColors.ControlLightLightBrushKey}}"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="20,0,0,0">
+                                <CheckBox Name="chkWideGantt" Content="Розширена діаграма" Margin="0,0,0,10"/>
+                                <Button Name="btnCalculate" 
+                                       Content="Розрахувати" 
+                                       Background="LightBlue"
+                                       Padding="15,10"
+                                       Click="BtnCalculate_Click"
+                                       Width="150"
+                                       Height="40" Cursor="Hand"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <Grid Name="gridPetri" Visibility="Collapsed">
+                    <TabControl>
+                        <TabItem Header="Процеси">
+                            <DataGrid Name="dgPetriProcesses" Margin="10">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Позначення" Binding="{Binding Name}" Width="100"/>
+                                    <DataGridTextColumn Header="Опис переходу" Binding="{Binding Description}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+
+                        <TabItem Header="Стани">
+                            <DataGrid Name="dgPetriPositions" Margin="10">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Перехід" Binding="{Binding Process}" Width="100"/>
+                                    <DataGridTextColumn Header="Позначення" Binding="{Binding Name}" Width="100"/>
+                                    <DataGridTextColumn Header="Опис стану" Binding="{Binding Description}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+
+                        <TabItem Header="Положення фішок">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <GroupBox Grid.Column="0" Header="Початкове положення " Margin="10">
+                                    <DataGrid Name="dgPetriStart">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Позначення" Binding="{Binding Name}" Width="100"/>
+                                            <DataGridTextColumn Header="Опис стану" Binding="{Binding Description}" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </GroupBox>
+
+                                <GroupBox Grid.Column="1" Header="Кінцеве положення " Margin="10">
+                                    <DataGrid Name="dgPetriFinish">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Позначення" Binding="{Binding Name}" Width="100"/>
+                                            <DataGridTextColumn Header="Опис стану" Binding="{Binding Description}" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </GroupBox>
+                            </Grid>
+                        </TabItem>
+
+                        <TabItem Header="Креслення">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Row="0" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="1" Margin="10">
+                                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                                        <Image Name="imgPetri" Stretch="None"/>
+                                    </ScrollViewer>
+                                </Border>
+
+                                <materialDesign:Card Grid.Row="1" Margin="10" Padding="15">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <TextBlock Text="Масштаб (%):"/>
+                                        <TextBox Name="txtPetriScale" Text="100" Width="60"
+         PreviewTextInput="NumberValidationTextBox"
+         TextChanged="NudPetri_ValueChanged"/>
+
+                                        <TextBlock Text="Позицій у рядку:" Margin="20,0,0,0"/>
+                                        <TextBox Name="txtPetriPosLine" Text="10" Width="60"
+         PreviewTextInput="NumberValidationTextBox"
+         TextChanged="NudPetri_ValueChanged"/>
+
+
+                                        <Button Name="btnSavePetri" 
+                                               Content="Зберегти" 
+                                               Style="{StaticResource MaterialDesignRaisedButton}"
+                                               Margin="30,0,0,0"
+                                               Click="BtnSavePetri_Click"/>
+                                    </StackPanel>
+                                </materialDesign:Card>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

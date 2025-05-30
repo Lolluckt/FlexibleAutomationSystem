@@ -1,0 +1,82 @@
+﻿<Window x:Class="FlexibleAutomationSystem.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Про програму" 
+        Height="400" Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+<Grid>
+    <Border Margin="20" CornerRadius="10" BorderBrush="Gray" BorderThickness="1" Background="White" Padding="30">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <TextBlock Text="🏭" FontSize="48" 
+                               Foreground="Blue"
+                               VerticalAlignment="Center" Margin="0,0,15,0"/>
+                <TextBlock Text="Курсовий проект" FontSize="24" FontWeight="Bold" 
+                             VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,20">
+                    <Run Text="Проект автоматизації управління" FontWeight="Bold"/>
+                    <LineBreak/>
+                    <Run Text="гнучкою автоматизованою дільницею"/>
+            </TextBlock>
+
+            <Separator Margin="0,10"/>
+
+            <Grid Margin="0,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Версія:" 
+                             FontWeight="Bold" Margin="0,0,10,5"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text=".NET 9.0" 
+                             Margin="0,0,0,5"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Призначення:" 
+                             FontWeight="Bold" Margin="0,0,10,5"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Виконання 3-го розділу курс. проектування" 
+                             TextWrapping="Wrap" Margin="0,0,0,5"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Технології:" 
+                             FontWeight="Bold" Margin="0,0,10,5"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="WPF" 
+                             Margin="0,0,0,5"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Розробник:" 
+                             FontWeight="Bold" Margin="0,0,10,5"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="Блінов Є.М. ІК-24" 
+                             Margin="0,0,0,5"/>
+            </Grid>
+
+            <Separator Margin="0,20,0,10"/>
+
+            <TextBlock Text="Основні можливості:" FontWeight="Bold" Margin="0,0,0,10"/>
+            <StackPanel Margin="20,0,0,0">
+                <TextBlock Text="• Побудова діаграм Ганта" Margin="0,2"/>
+                <TextBlock Text="• Генерація мереж Петрі" Margin="0,2"/>
+                <TextBlock Text="• Оптимізація розкладу виробництва" Margin="0,2"/>
+                <TextBlock Text="• Збереження та завантаження даних" Margin="0,2"/>
+            </StackPanel>
+
+            <Button Content="Закрити" 
+                       HorizontalAlignment="Center"
+                       Margin="0,30,0,0"
+                       Padding="20,5"
+                       Click="BtnClose_Click"/>
+        </StackPanel>
+    </Border>
+</Grid>
+</Window>
